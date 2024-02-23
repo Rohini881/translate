@@ -1,35 +1,40 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const translate = require('google-translate-api');
-const cors = require('cors'); // Import the cors module
+function translateFunction(){
+    let enteredText = document.getElementById('inputText').value;
+    let inputLanguage = document.getElementById('inputLanguage').value;
+    let outputLanguage = document.getElementById('outputLanguage').value;
 
-const app = express();
-const port = 3000;
-
-app.use(bodyParser.json());
-
-
-app.use(cors());
-
-app.post('/translate', async (req, res) => {
-    try {
-        const { text } = req.body;
-
-        if (!text) {
-            return res.status(400).json({ error: 'Text not provided in the request' });
-        }
-
-        // Translate the text from English to French
-        const translation = await translate(text, { from: 'en', to: 'fr' });
-
-        // Return the translated text in the response
-        res.json({ translatedText: translation.text });
-    } catch (error) {
-        console.error('Translation error:', error);
-        res.status(500).json({ error: 'Translation error' });
+    // console.log(enteredText, inputLanguage, outputLanguage);
+    if(enteredText==''){
+        alert('Please Enter Input');
     }
-});
+    else{
+        translateText(enteredText, inputLanguage, outputLanguage);
+    }
+}
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+async function translateText(enteredText, inputLanguage, outputLanguage){
+    try{
+        let result = await fetch("https://libretranslate.de/translate", {
+            method: "POST",
+            body: JSON.stringify({
+                q: enteredText,
+                source: inputLanguage,
+                target: outputLanguage,
+                format: "text"
+            }),
+            headers: { "Content-Type": "application/json" }
+        });
+
+        let output = await result.json();
+        // console.log(output);
+        let convertedText = output.translatedText;
+        showOutput(convertedText);
+    }
+    catch(error){
+        console.log(error)
+    }
+}
+
+function showOutput(convertedText){
+    document.getElementById('outputText').value = convertedText;
+}
