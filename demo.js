@@ -1,11 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const translate = require('google-translate-api');
+const cors = require('cors'); // Import the cors module
 
 const app = express();
-const port = 3000; // You can choose any available port
+const port = 3000;
 
 app.use(bodyParser.json());
+
+
+app.use(cors());
 
 app.post('/translate', async (req, res) => {
     try {
@@ -27,5 +31,5 @@ app.post('/translate', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on http: https://rohini881.github.io:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
