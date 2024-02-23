@@ -14,7 +14,7 @@ function translateFunction(){
 
 async function translateText(enteredText, inputLanguage, outputLanguage){
     try{
-        let result = await fetch("https://libretranslate.de/translate", {
+        let result = await fetch("https://libretranslate/translate", {
             method: "POST",
             body: JSON.stringify({
                 q: enteredText,
